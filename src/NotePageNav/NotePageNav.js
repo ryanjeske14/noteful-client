@@ -44,15 +44,3 @@ export default class NotePageNav extends React.Component {
   }
 }
 
-
-          /*render={routeProps => {
-            const { noteId } = routeProps.match.params // where was noteID defined as a route parameter?
-            const note = findNote(notes, noteId) || {}
-            const folder = findFolder(folders, note.folderId)
-            return (
-              <NotePageNav
-                {...routeProps}
-                folder={folder}
-              />
-            )
-          }}*/

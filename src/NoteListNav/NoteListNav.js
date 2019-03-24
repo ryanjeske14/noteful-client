@@ -5,6 +5,7 @@ import CircleButton from '../CircleButton/CircleButton'
 import { countNotesForFolder } from '../notes-helpers'
 import './NoteListNav.css'
 import AppContext from '../AppContext';
+import ErrorBoundary from '../ErrorBoundary'
 
 export default class NoteListNav extends Component {
   static contextType = AppContext;
@@ -14,21 +15,23 @@ export default class NoteListNav extends Component {
 
     return (
       <div className='NoteListNav'>
-        <ul className='NoteListNav__list'>
-          {folders.map(folder =>
-            <li key={folder.id}>
-              <NavLink
-                className='NoteListNav__folder-link'
-                to={`/folder/${folder.id}`}
-              >
-                <span className='NoteListNav__num-notes'>
-                  {countNotesForFolder(notes, folder.id)}
-                </span>
-                {folder.name}
-              </NavLink>
-            </li>
-          )}
-        </ul>
+        <ErrorBoundary>
+          <ul className='NoteListNav__list'>
+            {folders.map(folder =>
+                <li key={folder.id}>
+                  <NavLink
+                    className='NoteListNav__folder-link'
+                    to={`/folder/${folder.id}`}
+                  >
+                    <span className='NoteListNav__num-notes'>
+                      {countNotesForFolder(notes, folder.id)}
+                    </span>
+                    {folder.name}
+                  </NavLink>
+                </li>
+            )}
+          </ul>
+        </ErrorBoundary>
         <div className='NoteListNav__button-wrapper'>
           <CircleButton
             tag={Link}
@@ -46,11 +49,3 @@ export default class NoteListNav extends Component {
   }
 }
 
-
-/*render={routeProps =>
-              <NoteListNav
-                folders={folders}
-                notes={notes}
-                {...routeProps}
-              />
-            }*/

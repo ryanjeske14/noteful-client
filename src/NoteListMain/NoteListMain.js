@@ -6,6 +6,7 @@ import CircleButton from '../CircleButton/CircleButton'
 import './NoteListMain.css'
 import AppContext from '../AppContext';
 import {getNotesForFolder} from '../notes-helpers'
+import ErrorBoundary from '../ErrorBoundary'
 
 export default class NoteListMain extends React.Component {
   static defaultProps = {
@@ -22,17 +23,19 @@ export default class NoteListMain extends React.Component {
     const notesForFolder = getNotesForFolder(notes, folderId)
     return (
       <section className='NoteListMain'>
-        <ul>
-          {notesForFolder.map(note =>
-            <li key={note.id}>
-              <Note
-                id={note.id}
-                name={note.name}
-                modified={note.modified}
-              />
-            </li>
-          )}
-        </ul>
+        <ErrorBoundary>
+        	<ul>
+        	  {notesForFolder.map(note =>
+        	    <li key={note.id}>
+        	      <Note
+        	        id={note.id}
+        	        name={note.name}
+        	        modified={note.modified}
+        	      />
+        	    </li>
+        	  )}
+        	</ul>
+        </ErrorBoundary>
         <div className='NoteListMain__button-container'>
           <CircleButton
             tag={Link}
@@ -49,14 +52,3 @@ export default class NoteListMain extends React.Component {
     )
   }
 }
-
-            /*render={routeProps => {
-              const { folderId } = routeProps.match.params //where does folderId get defined?
-              const notesForFolder = getNotesForFolder(notes, folderId)
-              return (
-                <NoteListMain
-                  {...routeProps}
-                  notes={notesForFolder}
-                />
-              )
-            }}*/
