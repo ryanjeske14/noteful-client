@@ -1,69 +1,63 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { format } from 'date-fns'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import './Note.css'
-import AppContext from '../AppContext';
-import config from '../config'
-import PropTypes from 'prop-types';
+import React from "react";
+import { Link } from "react-router-dom";
+import { format } from "date-fns";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import "./Note.css";
+import AppContext from "../AppContext";
+import config from "../config";
+import PropTypes from "prop-types";
 
 export default class Note extends React.Component {
+  static contextType = AppContext;
 
-  static contextType = AppContext
-  
   handleClickDelete = event => {
-    event.preventDefault()
+    event.preventDefault();
 
-    const noteId = this.props.id
+    const noteId = this.props.id;
 
     fetch(`${config.API_ENDPOINT}/notes/${noteId}`, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        'content-type': 'application/json'
-      },
+        "content-type": "application/json"
+      }
     })
       .then(res => {
-        if (!res.ok)
-          return res.json().then(e => Promise.reject(e))
-        return res.json()
+        if (!res.ok) return res.json().then(e => Promise.reject(e));
+        return res;
       })
       .then(() => {
-        console.log(this.context)
-        this.context.deleteNote(noteId)
+        console.log(this.context);
+        this.context.deleteNote(noteId);
         // allow parent to perform extra behaviour
-        this.props.onDeleteNote(noteId)
+        this.props.onDeleteNote(noteId);
       })
       .catch(error => {
-        console.error({ error })
-      })
-  }
-  
-  
+        console.error({ error });
+      });
+  };
+
   render() {
-    const { name, id, modified } = this.props
+    const { name, id, modified } = this.props;
     return (
-      <div className='Note'>
-        <h2 className='Note__title'>
-          <Link to={`/note/${id}`}>
-            {name}
-          </Link>
+      <div className="Note">
+        <h2 className="Note__title">
+          <Link to={`/note/${id}`}>{name}</Link>
         </h2>
-        <button className='Note__delete' type='button' onClick={this.handleClickDelete}>
-          <FontAwesomeIcon icon='trash-alt' />
-          {' '}
-          remove
+        <button
+          className="Note__delete"
+          type="button"
+          onClick={this.handleClickDelete}
+        >
+          <FontAwesomeIcon icon="trash-alt" /> remove
         </button>
-        <div className='Note__dates'>
-          <div className='Note__dates-modified'>
-            Modified
-            {' '}
-            <span className='Date'>
-              {format(modified, 'Do MMM YYYY')}
-            </span>
+        <div className="Note__dates">
+          <div className="Note__dates-modified">
+            Modified{" "}
+            <span className="Date">{format(modified, "Do MMM YYYY")}</span>
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 
@@ -71,13 +65,12 @@ Note.defaultProps = {
   onDeleteNote: () => {},
   name: "",
   id: "",
-  modified: "",
-}
+  modified: ""
+};
 
 Note.propTypes = {
   onDeleteNote: PropTypes.func,
   name: PropTypes.string.isRequired,
-  id: PropTypes.string,
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   modified: PropTypes.string
-}
-
+};
