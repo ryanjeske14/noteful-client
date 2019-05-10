@@ -160,7 +160,7 @@ export default class AddNote extends Component {
   };
 
   render() {
-    const { folders } = this.context;
+    const { folders = [] } = this.context;
     return (
       <section className="AddNote">
         <h2>Create a note</h2>
